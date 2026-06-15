@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LunaLamb · 占卜与巫瓶</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Noto+Serif+SC:wght@300;400&family=Noto+Sans+SC:wght@300;400&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --cream: #F8F4EE;
+  --parchment: #F0E9DE;
+  --warm: #E8DDD0;
+  --taupe: #C9B99A;
+  --brown: #7A5C3E;
+  --brown-dark: #4E3A26;
+  --brown-light: #A8886A;
+  --mist: #EAE4DA;
+  --text: #3D2B1A;
+  --text-mid: #7A6050;
+  --text-light: #B0977E;
+}
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Noto Sans SC', sans-serif;
+  background: var(--cream);
+  color: var(--text);
+  line-height: 1.9;
+  font-size: 15px;
+}
+.en {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 0.85em;
+  color: var(--text-light);
+  display: block;
+  letter-spacing: 0.04em;
+  margin-top: 2px;
+}
+
+/* NAV */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  background: rgba(248,244,238,0.93);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--warm);
+  height: 58px;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 2.5rem;
+}
+.nav-logo {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 22px; font-style: italic; font-weight: 300;
+  color: var(--brown-dark); letter-spacing: 0.03em;
+}
+.nav-links { display: flex; gap: 2rem; list-style: none; }
+.nav-links a {
+  font-size: 13px; color: var(--text-mid);
+  text-decoration: none; letter-spacing: 0.08em;
+  transition: color 0.2s;
+  line-height: 1.3;
+}
+.nav-links a .en { font-size: 10px; margin-top: 1px; }
+.nav-links a:hover { color: var(--brown); }
+@media (max-width: 540px) { .nav-links { display: none; } }
+
+/* HERO */
+.hero {
+  min-height: 100vh;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  text-align: center;
+  padding: 80px 2rem 3rem;
+  position: relative; overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse 70% 50% at 50% 20%, #F5EEE288 0%, transparent 60%),
+    radial-gradient(ellipse 50% 70% at 20% 80%, #EDE3D533 0%, transparent 50%),
+    radial-gradient(ellipse 50% 70% at 80% 80%, #EDE3D533 0%, transparent 50%);
+  pointer-events: none;
+}
+.orb-wrap {
+  position: relative; width: 120px; height: 120px;
+  margin: 0 auto 2.5rem;
+}
+.orb {
+  width: 100%; height: 100%; border-radius: 50%;
+  background: radial-gradient(circle at 38% 36%, #FFFAF4, #E8D9C4 55%, #C9B99A 100%);
+  box-shadow: 0 0 40px 12px #E8D9C422, 0 0 80px 30px #D4C4AA11;
+  animation: pulse 5s ease-in-out infinite;
+}
+@keyframes pulse {
+  0%,100% { transform: scale(1); box-shadow: 0 0 40px 12px #E8D9C422, 0 0 80px 30px #D4C4AA11; }
+  50% { transform: scale(1.04); box-shadow: 0 0 55px 20px #E8D9C433, 0 0 100px 40px #D4C4AA18; }
+}
+.orb-glyph {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 42px; font-style: italic; font-weight: 300;
+  color: var(--brown-dark); opacity: 0.85;
+}
+.hero-script {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(2.8rem, 7vw, 4.5rem);
+  font-style: italic; font-weight: 300;
+  color: var(--brown-dark);
+  line-height: 1.1; letter-spacing: 0.02em;
+  margin-bottom: 0.5rem;
+  position: relative; z-index: 1;
+}
+.hero-zh {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 13px; letter-spacing: 0.3em;
+  color: var(--text-mid); margin-bottom: 0.3rem;
+  position: relative; z-index: 1;
+}
+.hero-en {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 14px; letter-spacing: 0.15em;
+  color: var(--text-light); margin-bottom: 1.8rem;
+  position: relative; z-index: 1;
+}
+.hero-tags {
+  display: flex; flex-wrap: wrap; gap: 8px;
+  justify-content: center; margin-bottom: 2rem;
+  position: relative; z-index: 1;
+}
+.hero-tag {
+  font-size: 12px; color: var(--brown-light);
+  border: 1px solid var(--warm);
+  border-radius: 20px; padding: 4px 14px;
+  letter-spacing: 0.05em;
+  background: rgba(255,255,255,0.5);
+  line-height: 1.6;
+}
+.hero-tag .en { font-size: 10px; margin-top: 0; display: inline; }
+.hero-cta {
+  display: inline-block;
+  padding: 13px 38px;
+  background: var(--brown);
+  color: #FAF7F2;
+  text-decoration: none;
+  font-size: 13px; letter-spacing: 0.15em;
+  border-radius: 2px;
+  transition: background 0.2s, transform 0.15s;
+  position: relative; z-index: 1;
+  line-height: 1.4;
+}
+.hero-cta:hover { background: var(--brown-dark); transform: translateY(-2px); }
+
+.ornament {
+  text-align: center; padding: 0.5rem 0;
+  color: var(--taupe); font-size: 18px; letter-spacing: 0.4em;
+  opacity: 0.7;
+}
+
+/* SECTIONS */
+.section { padding: 4.5rem 2rem; max-width: 820px; margin: 0 auto; }
+.section-eyebrow {
+  font-size: 11px; letter-spacing: 0.3em; color: var(--text-light);
+  text-transform: uppercase; margin-bottom: 0.4rem;
+}
+.section-title {
+  font-family: 'Noto Serif SC', serif;
+  font-size: clamp(1.4rem, 3vw, 1.9rem);
+  font-weight: 300; color: var(--text);
+  margin-bottom: 0.3rem; letter-spacing: 0.04em;
+}
+.section-title-en {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic; font-size: 15px;
+  color: var(--text-light); margin-bottom: 2.2rem;
+  display: block; letter-spacing: 0.06em;
+}
+
+/* TOPICS */
+.topics-wrap {
+  background: var(--parchment);
+  border: 1px solid var(--warm);
+  border-radius: 6px;
+  padding: 2rem 2rem 1.5rem;
+  margin-bottom: 2rem;
+}
+.topics-label {
+  font-size: 12px; letter-spacing: 0.2em; color: var(--text-light);
+  margin-bottom: 0.3rem; display: block;
+}
+.topics-label-en {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic; font-size: 12px;
+  color: var(--taupe); margin-bottom: 1rem; display: block;
+}
+.topics-grid { display: flex; flex-wrap: wrap; gap: 8px; }
+.topic-chip {
+  font-size: 13px; color: var(--brown);
+  background: rgba(255,255,255,0.7);
+  border: 1px solid var(--taupe);
+  border-radius: 20px; padding: 5px 16px;
+  letter-spacing: 0.03em; line-height: 1.5;
+}
+.topic-chip .en { font-size: 10px; margin-top: 0; display: inline; color: var(--brown-light); }
+
+/* METHODS */
+.methods-row { display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 1.5rem; }
+.method-badge {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 14px; color: var(--brown-dark);
+  background: var(--mist);
+  border: 1px solid var(--warm);
+  border-radius: 4px; padding: 8px 20px;
+  letter-spacing: 0.06em; line-height: 1.6; text-align: center;
+}
+.method-badge .en { font-size: 10px; color: var(--text-light); }
+
+/* BOTTLE */
+.bottle-card {
+  background: linear-gradient(135deg, #F5EDE0, #EDE3D5);
+  border: 1px solid var(--taupe);
+  border-radius: 6px;
+  padding: 2.5rem 2rem;
+  display: grid; grid-template-columns: auto 1fr; gap: 2rem;
+  align-items: center;
+  margin-top: 1.5rem;
+}
+@media (max-width: 480px) { .bottle-card { grid-template-columns: 1fr; text-align: center; } }
+.bottle-icon { font-size: 56px; }
+.bottle-title {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 18px; font-weight: 300;
+  color: var(--text); margin-bottom: 0.2rem;
+}
+.bottle-title-en {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic; font-size: 14px;
+  color: var(--text-light); margin-bottom: 0.6rem; display: block;
+}
+.bottle-desc { font-size: 13px; color: var(--text-mid); line-height: 1.9; }
+.bottle-desc-en {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic; font-size: 12px;
+  color: var(--taupe); margin-top: 0.5rem; display: block; line-height: 1.7;
+}
+.bottle-note {
+  margin-top: 0.8rem;
+  font-size: 12px; color: var(--brown-light);
+  font-style: italic; letter-spacing: 0.05em;
+}
+
+/* NOTICE */
+.notice-section {
+  background: var(--parchment);
+  border-top: 1px solid var(--warm);
+  border-bottom: 1px solid var(--warm);
+}
+.notice-inner { max-width: 820px; margin: 0 auto; padding: 4rem 2rem; }
+.notice-list {
+  list-style: none;
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.5rem;
+}
+.notice-item { display: flex; gap: 1rem; align-items: flex-start; }
+.notice-num {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 32px; font-style: italic; font-weight: 300;
+  color: var(--taupe); line-height: 1; min-width: 36px;
+}
+.notice-text { font-size: 13px; color: var(--text-mid); line-height: 1.9; padding-top: 6px; }
+.notice-text .en { font-size: 11px; margin-top: 2px; }
+
+/* CONTACT */
+.contact-section { text-align: center; padding: 5rem 2rem; }
+.contact-inner { max-width: 460px; margin: 0 auto; }
+.wechat-id {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 28px; font-style: italic;
+  color: var(--brown-dark); letter-spacing: 0.05em;
+  margin: 1.5rem 0 0.2rem;
+}
+.wechat-label { font-size: 12px; color: var(--text-light); letter-spacing: 0.2em; }
+.wechat-label .en { font-size: 11px; display: inline; margin-left: 6px; font-style: italic; }
+.contact-note { font-size: 13px; color: var(--text-mid); margin-top: 1.5rem; line-height: 2; }
+.contact-note .en { font-size: 11px; display: block; color: var(--text-light); font-style: italic; letter-spacing: 0.03em; }
+.cta-wrap { margin-top: 2rem; }
+.cta-btn {
+  display: inline-block;
+  padding: 13px 40px;
+  background: var(--brown);
+  color: #FAF7F2;
+  text-decoration: none;
+  font-size: 13px; letter-spacing: 0.12em;
+  border-radius: 2px;
+  transition: background 0.2s;
+  line-height: 1.5;
+}
+.cta-btn:hover { background: var(--brown-dark); }
+
+footer {
+  text-align: center; padding: 2rem;
+  font-size: 11px; color: var(--text-light);
+  border-top: 1px solid var(--warm);
+  letter-spacing: 0.08em; line-height: 2.2;
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">LunaLamb</div>
+  <ul class="nav-links">
+    <li><a href="#divination">占卜服务<span class="en">Divination</span></a></li>
+    <li><a href="#bottle">巫瓶<span class="en">Witch Bottle</span></a></li>
+    <li><a href="#notice">须知<span class="en">Please Read</span></a></li>
+    <li><a href="#contact">联系我<span class="en">Contact</span></a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="orb-wrap">
+    <div class="orb"></div>
+    <div class="orb-glyph">☽</div>
+  </div>
+
+  <h1 class="hero-script">LunaLamb</h1>
+  <p class="hero-zh">温柔占卜 · 随身巫瓶</p>
+  <p class="hero-en">Gentle Readings · Handcrafted Witch Bottles</p>
+
+  <div class="hero-tags">
+    <span class="hero-tag">塔罗牌 <span class="en">Tarot</span></span>
+    <span class="hero-tag">六爻 <span class="en">Liu Yao</span></span>
+    <span class="hero-tag">周易 <span class="en">I Ching</span></span>
+    <span class="hero-tag">梅花易数 <span class="en">Plum Blossom</span></span>
+    <span class="hero-tag">巫瓶定制 <span class="en">Custom Bottles</span></span>
+  </div>
+
+  <a href="#contact" class="hero-cta">预约咨询<br><span style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:11px;opacity:0.8;letter-spacing:0.1em;">Book a Reading</span></a>
+</section>
+
+<div class="ornament">· · ✦ · ·</div>
+
+<!-- DIVINATION -->
+<section class="section" id="divination">
+  <p class="section-eyebrow">占卜服务 · Divination Services</p>
+  <h2 class="section-title">可以为你解答的方向</h2>
+  <span class="section-title-en">What I can help you explore</span>
+
+  <div class="topics-wrap">
+    <span class="topics-label">可占内容类型</span>
+    <span class="topics-label-en">Topics available for reading</span>
+    <div class="topics-grid">
+      <span class="topic-chip">感情 <span class="en">Romance</span></span>
+      <span class="topic-chip">暧昧 <span class="en">Undefined Relationships</span></span>
+      <span class="topic-chip">复合 <span class="en">Reconciliation</span></span>
+      <span class="topic-chip">关系发展 <span class="en">Relationship Growth</span></span>
+      <span class="topic-chip">学业 <span class="en">Studies</span></span>
+      <span class="topic-chip">考试 <span class="en">Exams</span></span>
+      <span class="topic-chip">选择 <span class="en">Decision Making</span></span>
+      <span class="topic-chip">未来方向 <span class="en">Future Direction</span></span>
+      <span class="topic-chip">人际关系 <span class="en">Interpersonal</span></span>
+      <span class="topic-chip">近期运势 <span class="en">Near Future</span></span>
+    </div>
+  </div>
+
+  <span class="topics-label" style="margin-bottom:0.3rem;display:block;">使用方法</span>
+  <span class="topics-label-en" style="margin-bottom:0.8rem;display:block;">Methods used</span>
+  <div class="methods-row">
+    <span class="method-badge">塔罗牌<span class="en">Tarot</span></span>
+    <span class="method-badge">六爻<span class="en">Liu Yao</span></span>
+    <span class="method-badge">周易<span class="en">I Ching</span></span>
+    <span class="method-badge">梅花易数<span class="en">Plum Blossom</span></span>
+  </div>
+</section>
+
+<!-- BOTTLE -->
+<section class="section" id="bottle">
+  <p class="section-eyebrow">实体产品 · Physical Products</p>
+  <h2 class="section-title">巫瓶</h2>
+  <span class="section-title-en">Witch Bottle</span>
+
+  <div class="bottle-card">
+    <div class="bottle-icon">🧿</div>
+    <div>
+      <div class="bottle-title">随身携带的能量巫瓶</div>
+      <span class="bottle-title-en">A handcrafted energy bottle, made just for you</span>
+      <p class="bottle-desc">
+        依据你的个人意图与需求手工制作，内含与你命格相应的草药、矿石与符咒。
+        可定制心愿方向：守护、招财、招桃花、净化、助眠等。
+        每一瓶都独一无二，专属于你。
+      </p>
+      <span class="bottle-desc-en">Each bottle is handmade with herbs, crystals, and intentions aligned to your wishes. Choose your focus: protection, prosperity, love, cleansing, or rest. No two bottles are alike.</span>
+      <p class="bottle-note">✦ 随身携带，将意念常驻身边 · Carry your intention with you, always</p>
+    </div>
+  </div>
+</section>
+
+<!-- NOTICE -->
+<section class="notice-section" id="notice">
+  <div class="notice-inner">
+    <p class="section-eyebrow" style="margin-bottom:0.4rem;">占卜须知 · Please Read Before Booking</p>
+    <h2 class="section-title" style="margin-bottom:0.3rem;">请在咨询前了解</h2>
+    <span class="section-title-en">A few things to know</span>
+    <ul class="notice-list">
+      <li class="notice-item">
+        <span class="notice-num">①</span>
+        <p class="notice-text">客人较多时请耐心等待，会按顺序回复<span class="en">During busy periods, please wait patiently — I reply in order.</span></p>
+      </li>
+      <li class="notice-item">
+        <span class="notice-num">②</span>
+        <p class="notice-text">全程尊重隐私且保密，请放心提问<span class="en">Your privacy is fully respected. Everything shared stays between us.</span></p>
+      </li>
+      <li class="notice-item">
+        <span class="notice-num">③</span>
+        <p class="notice-text">每次只问一个问题，以保证准确度<span class="en">Please ask one question per session for the most accurate reading.</span></p>
+      </li>
+      <li class="notice-item">
+        <span class="notice-num">④</span>
+        <p class="notice-text">温柔占卜，不恐吓、不贩卖焦虑。占卜起卦为参考与引导，最终决策请自行把握<span class="en">Gentle readings only — no fear-mongering, no anxiety-selling. Readings are guidance, not fate. Your choices are always your own.</span></p>
+      </li>
+    </ul>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="contact-section" id="contact">
+  <div class="contact-inner">
+    <p class="section-eyebrow">联系我 · Get in Touch</p>
+    <h2 class="section-title" style="margin-bottom:0.2rem;">预约咨询 / 巫瓶定制</h2>
+    <span class="section-title-en" style="margin-bottom:0.3rem;display:block;">Book a Reading · Order a Witch Bottle</span>
+    <p style="font-size:13px; color:var(--text-light);">加微信告诉我你的需求<span class="en" style="display:inline;margin-left:6px;">Add me on WeChat and share what you need</span></p>
+
+    <div class="wechat-id">LunaLamb224</div>
+    <div class="wechat-label">微信号 <span class="en">WeChat ID</span></div>
+
+    <p class="contact-note">
+      工作时间每日回复<span class="en">I reply daily during working hours</span>
+      占卜 · 巫瓶定制 · 任何疑问都欢迎来聊<span class="en">Readings · Witch Bottles · Any questions welcome</span>
+    </p>
+    <div class="cta-wrap">
+      <a href="#" class="cta-btn">添加微信 · Add on WeChat</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  © 2026 LunaLamb · 占卜与巫瓶 · Divination & Witch Bottles<br>
+  <span style="opacity:0.6;">占卜起卦仅供参考与引导，最终决策请自行把握<br>
+  Readings are for guidance only. All final decisions remain your own.</span>
+</footer>
+
+</body>
+</html>
